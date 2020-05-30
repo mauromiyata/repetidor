@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Repetidor</title>
+	<style>
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+		}
+		textarea {
+			display: block;
+			width: 100%
+		}
+	</style>
+</head>
+
+<body>
+	<form>
+		<label for="template">Template</label>
+		<textarea id="template" rows="10" placeholder="Ex: &#x3C;p class=&#x22;linha-###&#x22;&#x3E;###&#x3C;/p&#x3E;"></textarea>
+		<label for="substituir">Padrão q vai ser substituido</label>
+		<input id="substituir" type="text" value="###" />
+		<label for="padrao">Formato do número</label>
+		<input id="padrao" type="text" value="999" />
+		<label for="repeticoes">Repetições</label>
+		<input id="repeticoes" type="number" value="0" />
+		<input id="botao" type="button" value="ok" />
+	</form>
+
+	<textarea id="saida" rows="20"></textarea>
+
+	<script>
+		const botao = document.getElementById('botao');
+		const inputRepeticoes = document.getElementById('repeticoes');
+		const inputSubstituir = document.getElementById('substituir');
+		const inputTemplate = document.getElementById('template');
+		const inputPadrao = document.getElementById('padrao');
+		const inputSaida = document.getElementById('saida');
+
+		botao.addEventListener('click', processa);
+
+		function processa() {
+			const repeticoes = parseInt(inputRepeticoes.value);
+			const template = inputTemplate.value;
+			const substituir = inputSubstituir.value;
+			let saida = "";
+			const padrao = inputPadrao.value.length;
+
+			if (repeticoes < 1 || isNaN(repeticoes)) {
+				alert("repetição inválida");
+				return;
+			}
+
+			for (let i = 1; i <= repeticoes; i++) {
+				const n2s = formata(i, padrao);
+				const temp = template.split(substituir).join(n2s);
+
+				if (i != 1) saida += "\r\n";
+				saida += temp;
+
+			}
+
+			inputSaida.value = saida;
+		}
+
+		function formata(n, l) {
+			let s = n.toString();
+			const sl = s.length;
+
+			if (sl < l) {
+				for (j = 0; j < (l - sl); j++) {
+					s = "0" + s;
+				}
+			}
+
+			return s;
+		}
+	</script>
+</body>
+
+</html>
